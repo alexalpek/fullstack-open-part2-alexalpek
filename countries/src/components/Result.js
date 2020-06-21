@@ -1,15 +1,29 @@
 import React from "react";
 import CountryInfo from "./CountryInfo";
 
-const Result = ({ filtered, filterWord, countries }) => {
+const Result = ({
+    filtered,
+    filterWord,
+    countries,
+    showCountry,
+    setShowCountry,
+}) => {
     const countriesToShow = filtered
         ? countries.data.filter((country) =>
               country.name.toLowerCase().includes(filterWord.toLowerCase())
           )
         : countries.data;
 
+    const handleClick = (country) => {
+        setShowCountry(country);
+    };
+
     if (filtered === false) {
         return <div />;
+    }
+
+    if (showCountry !== null) {
+        return <CountryInfo countryData={showCountry} />;
     }
 
     if (countriesToShow.length > 10) {
@@ -18,7 +32,18 @@ const Result = ({ filtered, filterWord, countries }) => {
         return (
             <div>
                 {countriesToShow.map((country) => (
-                    <div key={country.name}>{country.name}</div>
+                    <div
+                        key={`${country.name}-div`}
+                        style={{ display: "flex" }}
+                    >
+                        <div key={country.name}>{country.name} </div>
+                        <button
+                            key={`${country.name}button`}
+                            onClick={() => handleClick(country)}
+                        >
+                            show
+                        </button>
+                    </div>
                 ))}
             </div>
         );

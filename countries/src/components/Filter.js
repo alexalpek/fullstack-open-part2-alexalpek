@@ -1,8 +1,9 @@
 import React from "react";
 
-const Filter = ({ setFiltered, setFilterWord }) => {
+const Filter = ({ setFiltered, setFilterWord, setShowCountry }) => {
     const handleFilterSubmit = (event) => {
         let filterWord = event.target.value;
+        setShowCountry(null);
         setFilterWord(filterWord);
         if (filterWord === "") {
             setFiltered(false);
