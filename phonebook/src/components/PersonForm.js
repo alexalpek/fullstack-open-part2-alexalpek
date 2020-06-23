@@ -17,7 +17,29 @@ const PersonForm = ({
     const handleSubmit = (event) => {
         event.preventDefault();
         if (nameAlreadyInPhonebook(newName)) {
-            alert(`${newName} is already added to phonebook!`);
+            if (
+                window.confirm(
+                    `${newName} is already in the phonebook, replace the old number with a new one?`
+                )
+            ) {
+                const currentDataOfPerson = persons.find(
+                    (person) => person.name === newName
+                );
+                const newPerson = {
+                    ...currentDataOfPerson,
+                    number: newPhoneNumber,
+                };
+                phonebookService
+                    .update(currentDataOfPerson.id, newPerson)
+                    .then(
+                        setPersons(
+                            persons.map((p) =>
+                                p.id === currentDataOfPerson.id ? newPerson : p
+                            )
+                        )
+                    )
+                    .catch((e) => console.log(e));
+            }
         } else {
             const nameToAdd = {
                 name: newName,
