@@ -1,4 +1,5 @@
 import React from "react";
+import phonebookService from "../services/phonebookService";
 
 const PersonForm = ({
     setNewName,
@@ -22,7 +23,10 @@ const PersonForm = ({
                 name: newName,
                 number: newPhoneNumber,
             };
-            setPersons(persons.concat(nameToAdd));
+            phonebookService
+                .create(nameToAdd)
+                .then((newPerson) => setPersons(persons.concat(newPerson)))
+                .catch((error) => console.log(error));
         }
     };
 
