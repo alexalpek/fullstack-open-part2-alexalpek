@@ -8,10 +8,22 @@ const PersonForm = ({
     newName,
     newPhoneNumber,
     setPersons,
+    setNotificationMessage,
+    setIsError,
 }) => {
     const nameAlreadyInPhonebook = (name) => {
         const result = persons.filter((person) => person.name === name);
         return result.length !== 0;
+    };
+
+    const displayNotification = (message, error = false) => {
+        setNotificationMessage(message);
+        setTimeout(() => {
+            setNotificationMessage(null);
+            if (error) {
+                setIsError(false);
+            }
+        }, 5000);
     };
 
     const handleSubmit = (event) => {
@@ -38,7 +50,23 @@ const PersonForm = ({
                             )
                         )
                     )
-                    .catch((e) => console.log(e));
+                    .then(
+                        displayNotification(
+                            `${newPerson.name}'s phone number is changed.`
+                        )
+                    )
+                    .catch((e) => {
+                        setIsError(true);
+                        displayNotification(
+                            `Information of ${newPerson.name} has been already removed from the server`,
+                            true
+                        );
+                        setPersons(
+                            persons.filter(
+                                (person) => person.id !== newPerson.id
+                            )
+                        );
+                    });
             }
         } else {
             const nameToAdd = {
@@ -47,7 +75,8 @@ const PersonForm = ({
             };
             phonebookService
                 .create(nameToAdd)
-                .then((newPerson) => setPersons(persons.concat(newPerson)))
+                .then((person) => setPersons(persons.concat(person)))
+                .then(displayNotification(`${nameToAdd.name} is created.`))
                 .catch((error) => console.log(error));
         }
     };

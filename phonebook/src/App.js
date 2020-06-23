@@ -4,6 +4,7 @@ import Persons from "./components/Persons";
 import Filter from "./components/Filter";
 import Title from "./components/Title";
 import phonebookService from "./services/phonebookService";
+import Notification from "./components/Notification";
 
 const App = () => {
     const [persons, setPersons] = useState([]);
@@ -11,6 +12,8 @@ const App = () => {
     const [newPhoneNumber, setNewPhoneNumber] = useState("");
     const [filterWord, setFilterWord] = useState("");
     const [filtered, setFiltered] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState(null);
+    const [isError, setIsError] = useState(false);
 
     useEffect(() => {
         phonebookService
@@ -22,6 +25,7 @@ const App = () => {
     return (
         <div>
             <Title text="Phonebook" />
+            <Notification message={notificationMessage} isError={isError} />
             <Filter setFiltered={setFiltered} setFilterWord={setFilterWord} />
             <Title text="add a new" />
             <PersonForm
@@ -31,6 +35,8 @@ const App = () => {
                 newName={newName}
                 newPhoneNumber={newPhoneNumber}
                 setPersons={setPersons}
+                setNotificationMessage={setNotificationMessage}
+                setIsError={setIsError}
             />
             <Title text="Numbers" />
             <Persons
@@ -38,6 +44,8 @@ const App = () => {
                 filterWord={filterWord}
                 persons={persons}
                 setPersons={setPersons}
+                setNotificationMessage={setNotificationMessage}
+                setIsError={setIsError}
             />
         </div>
     );
